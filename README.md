@@ -54,7 +54,7 @@ filetree
 └─visfuzz
     ├─fuzz    #fuzz框架
     │  ├─afl  #AFL框架
-    │  └─llvm #LibFuzzer框架
+    │  └─llvm #LibFuzzer框架，利用llvm框架构建了函数调用图
     └─visualization #web网页，有几个第三方库（Bootstrap、Chart.js、FontAwesome、jQuery）
         ├─css
         ├─d3
