@@ -45,29 +45,24 @@ git clone https://github.com/CookedMelon/FuzzVis.git
 
 eg:
 
-```
+```bash
 filetree
-├── ARCHITECTURE.md
-├── LICENSE.txt
-├── README.md
-├── /account/
-├── /bbs/
-├── /docs/
-│  ├── /rules/
-│  │  ├── backend.txt
-│  │  └── frontend.txt
-├── manage.py
-├── /oa/
-├── /static/
-├── /templates/
-├── useless.md
-└── /util/
-
+├─README.md
+├─demo    #测试程序和数据
+│  ├─json
+│  └─re2
+└─visfuzz
+    ├─fuzz    #fuzz框架
+    │  ├─afl  #AFL框架
+    │  └─llvm #LibFuzzer框架
+    └─visualization #web网页，有几个第三方库（Bootstrap、Chart.js、FontAwesome、jQuery）
+        ├─css
+        ├─d3
+        ├─fig
+        ├─js
+        ├─scss
+        └─vendor
 ```
-
-### 开发的架构
-
-请阅读[ARCHITECTURE.md](https://github.com/CookedMelon/FuzzVis/blob/master/ARCHITECTURE.md) 查阅为该项目的架构。
 
 ### 部署
 
@@ -75,9 +70,7 @@ filetree
 
 ### 使用到的框架
 
-- [xxxxxxx](https://getbootstrap.com)
-- [xxxxxxx](https://jquery.com)
-- [xxxxxxx](https://laravel.com)
+- 
 
 ### 贡献者
 
@@ -92,20 +85,6 @@ filetree
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-### 版本控制
-
-该项目使用 Git 进行版本管理。您可以在 repository 参看当前可用版本。
-
-### 作者
-
-llyiyi@llyiyi@mail.nwpu.edu.cn
-
-_您也可以在贡献者名单中参看所有参与该项目的开发者。_
-
-### 版权说明
-
-该项目签署了 GNU GPLv3 授权许可，详情请参阅 [LICENSE](https://github.com/CookedMelon/FuzzVis/blob/master/LICENSE)
 
 ### 鸣谢
 
