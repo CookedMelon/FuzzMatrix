@@ -1,0 +1,121 @@
+.row{
+    display: flex;
+    flex-direction: row;
+}
+.column{
+    display: flex;
+    flex-direction: column;
+}
+.blank-sm{
+    height:10px;
+}
+.blank-mid{
+    height:20px;
+}
+.blank-across{
+    width:20px;
+}
+.padding-sm{
+    padding: 10px;
+}
+.padding{
+    padding: 20px;
+}
+.padding-left{
+    padding-left: 20px;
+}
+.padding-left-lg{
+    padding-left: 40px;
+}
+.margin-sm{
+    margin: 10px;
+}
+.margin{
+    margin: 20px;
+}
+.margin-top-sm{
+    margin-top: 10px;
+}
+.margin-top{
+    margin-top: 20px;
+}
+.margin-left{
+    margin-left: 20px;
+}
+.margin-right{
+    margin-right: 20px;
+}
+.margin-bottom{
+    margin-bottom: 20px;
+}
+button:hover{
+    opacity: 0.8;
+}
+.hover:hover{
+    opacity: 0.8;
+}
+.title{
+    font-size: 30px;
+    font-weight: bold;
+    color: black;
+    z-index: 9;
+}
+.line{
+    border-bottom: 1px solid #eef1f6;
+}
+.text{
+    font-size: 20px;
+}
+.text-left{
+    text-align: left;
+}
+.bgcol{
+    background-color: rgb(238, 241, 246);
+}
+.bgcol2{
+    background-color: rgba(255, 255, 255, 0.134);
+}
+.bgcol3{
+    background-color: #eef1f6!important;
+}
+.lay-right{
+    margin-left:auto
+}
+.fa-center{
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+}
+.rad-border-sm{
+    border-radius: 10px;
+}
+.rad-border{
+    border-radius: 20px;
+}
+
+.width-100{
+    width: 100%;
+}
+.mid{
+    margin: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.text-center{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index:999999
+}
+.text-tewline{
+    display: -webkit-box; 
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
