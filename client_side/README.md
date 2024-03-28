@@ -44,6 +44,7 @@ python $TOOL_PATH/open_file_server.py 6767
 ## Project setup
 
 ```bash
+cd client_side
 npm install
 ```
 
