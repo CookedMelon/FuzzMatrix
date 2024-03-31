@@ -4,8 +4,7 @@
         flex:2;
         height:100%;
         box-shadow: var(--el-box-shadow-light);
-        border-radius: 8px;
-        "
+        border-radius: 8px;"
     >
         <!-- 将原本放在js中的弹窗设置在vue中，这样能使用vue的模板创建更好看的弹窗，当鼠标悬停时改变弹窗的可变性、位置、函数名等参数，通过ref进行这些参数的传递 -->
         <el-card style="
@@ -140,9 +139,13 @@
         var max_block_sum = 0;
         var explored_functions = null;
         var unexplored_functions = null;
+        console.log("out");
         d3.json("/api/static.json").then(function (graph) {
+            console.log("first");
             d3.json("/api/out/block_freq.json?_=" + Math.random()).then(function (_block_freq) {
+                console.log("second");
                 d3.text("/api/out/fuzzer_stats?_=" + Math.random()).then(function (text) {
+                    console.log("third");
                     var map = {};
                     var temp_str = text.split("\n");
                     for (var i = 0; i < temp_str.length; i++) {
@@ -240,7 +243,7 @@
                     .data(nodes)
                     .enter().append("g");
                 
-
+                // 节点对象
                 var circles = node_enter.append("circle")
                     .attr("id", function (d) {
                         return "node" + d["id"];
@@ -273,6 +276,9 @@
                     })
                     .on("mouseout", function () {
                         that.displaybox=0;
+                    })
+                    .on("click", function () {
+                        console.log("in click");
                     })
                     .call(d3.drag()
                         .on("start", dragstarted)

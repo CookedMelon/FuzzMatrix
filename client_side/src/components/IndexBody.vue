@@ -3,7 +3,7 @@
     <el-container style="height: 100%;">
       <el-aside width="200px">
         <el-menu
-            default-active="1"
+            default-active="2"
             class="el-menu-vertical-demo"
         >
             <el-menu-item index="1" v-on:click="$router.push('/index/Overview')">

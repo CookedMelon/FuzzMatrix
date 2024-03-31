@@ -5,7 +5,6 @@
     </div>
 </template>
 <script>
-import '@element-plus/icons-vue'
 import D3Chart from './D3CFG.vue';
 import CFG_right from './CFG-right.vue';
 export default {
@@ -17,7 +16,6 @@ export default {
     mounted(){
     },
     methods:{
-        
     }
 }
 </script>
