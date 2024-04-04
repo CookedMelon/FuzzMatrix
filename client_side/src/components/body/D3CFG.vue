@@ -365,7 +365,7 @@ export default {
 
                     function show_file(file_path, start_line, end_line) {
                         var rawFile = new XMLHttpRequest();
-                        rawFile.open("GET", "http://localhost:6767/" + file_path, true);
+                        rawFile.open("GET", "/api/" + file_path, true);
                         rawFile.onreadystatechange = function () {
                             if (rawFile.readyState == 4 && rawFile.status == "200") {
                                 that.codeText = rawFile.responseText;
