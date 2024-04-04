@@ -139,13 +139,9 @@
         var max_block_sum = 0;
         var explored_functions = null;
         var unexplored_functions = null;
-        console.log("out");
         d3.json("/api/static.json").then(function (graph) {
-            console.log("first");
             d3.json("/api/out/block_freq.json?_=" + Math.random()).then(function (_block_freq) {
-                console.log("second");
                 d3.text("/api/out/fuzzer_stats?_=" + Math.random()).then(function (text) {
-                    console.log("third");
                     var map = {};
                     var temp_str = text.split("\n");
                     for (var i = 0; i < temp_str.length; i++) {
