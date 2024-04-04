@@ -4,8 +4,8 @@ import router from './router'
 import 'element-plus/dist/index.css'
 import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-const app = createApp(App)
 
+const app = createApp(App)
 
 // 创建全局变量
 const detail_val=ref({
