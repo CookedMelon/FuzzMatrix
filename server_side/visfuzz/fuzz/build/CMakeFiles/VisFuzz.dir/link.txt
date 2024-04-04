@@ -1,0 +1,1 @@
+clang++-10 -fPIC -shared  -o libVisFuzz.so CMakeFiles/VisFuzz.dir/plugin.cc.o   -L/usr/lib/llvm-10/lib 
