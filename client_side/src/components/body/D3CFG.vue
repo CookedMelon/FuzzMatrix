@@ -30,15 +30,30 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6" id="left_col" style="height: 600px; overflow: auto;">
+                    <div class="col-md-8" id="left_col" style="height: 600px; overflow: scroll;"  ref="leftCol">
                         <pre><code class="language-clike line-numbers">{{ codeText }}</code></pre>
                     </div>
-                    <div class="col-md-6" id="right_col">
-                        <div class="svgContainer" style="height: 600px;  overflow: auto" id="right_col">
-                            <!-- SVG chart content -->
+                    <div class="col-md-4" id="right_col">
+                        <div class="svgContainer" style="height: 600px;overflow: scroll" id="right_svg">
                         </div>
                     </div>
                 </div>
+                <el-card style="
+                        max-width: 600px;
+                        position:fixed;
+                        text-align: left;
+                        pointer-events: none;
+                        background-color: #f0f0f0;
+                    " :style="{
+                        visibility: displayboxin === 1 ? 'visible' : 'hidden',
+                        top: boxpositionin.y + 'px',
+                        left: boxpositionin.x + 'px'
+                    }
+                        ">
+                    <p class="text_item"><b>start line:</b> {{ boxvaluein.start_line }}</p>
+                    <p class="text_item"><b>end line:</b> {{ boxvaluein.end_line }}</p>
+                    <p class="text_item"><b>frequency:</b> {{ boxvaluein.frequency }}</p>
+                </el-card>
             </div>
         </el-dialog>
     </div>
@@ -50,6 +65,7 @@ import { ref, inject } from 'vue';
 import Prism from "prismjs";
 import "../../css/prism.css";
 const displaybox = ref(0);
+const displayboxin = ref(0);
 const dialogVisible = ref(false)
 const dialogTitle = ref(null);
 const codeText = ref(null);
@@ -58,15 +74,25 @@ const boxposition = ref({
     "x": 0,
     "y": 0
 });
+const boxpositionin = ref({
+    "x": 0,
+    "y": 0
+});
 const boxvalue = ref({
     "file_name": "",
     "function_name": "",
+    "frequency": ""
+});
+const boxvaluein = ref({
+    "start_line": "",
+    "end_line": "",
     "frequency": ""
 });
 export default {
     data() {
         return {
             displaybox, boxvalue, boxposition,
+            displayboxin, boxvaluein, boxpositionin,
             dialogVisible,
             dialogTitle,
             codeText,
@@ -74,9 +100,7 @@ export default {
         };
     },
     mounted() {
-        Prism.highlightAll();
         this.buildCFG();
-
     },
     setup() {
         const detail_val = inject("detail_val");
@@ -85,7 +109,6 @@ export default {
         }
     },
     methods: {
-
         buildCFG() {
             var that = this;
             var height = document.getElementById('chart_side').clientHeight;
@@ -182,13 +205,9 @@ export default {
             var max_block_sum = 0;
             var explored_functions = null;
             var unexplored_functions = null;
-            console.log("out");
             d3.json("/api/static.json").then(function (graph) {
-                console.log("first");
                 d3.json("/api/out/block_freq.json?_=" + Math.random()).then(function (_block_freq) {
-                    console.log("second");
                     d3.text("/api/out/fuzzer_stats?_=" + Math.random()).then(function (text) {
-                        console.log("third");
                         var map = {};
                         var temp_str = text.split("\n");
                         for (var i = 0; i < temp_str.length; i++) {
@@ -305,8 +324,6 @@ export default {
                         .attr("stroke-width", "3px")
                         .attr("fill", function (d) { return d3.interpolatePiYG(1 - d["color"]); })
                         .on("mouseover", function (event, d) {  // 注意这里的参数变化，现在事件对象作为第一个参数
-                            // 主要进行参数传递
-                            console.log("in mouseover", event, d);
                             that.displaybox = 1;
                             // box显示位置
                             that.boxposition.x = event.x + 10;
@@ -315,12 +332,12 @@ export default {
                             that.boxvalue.file_name = d["filename"];
                             that.boxvalue.function_name = d["name"];
                             that.boxvalue.frequency = d["freq"];
-                            console.log("boxvalue", that.boxvalue)
                         })
                         .on("mouseout", function () {
                             that.displaybox = 0;
                         })
                         .on("dblclick", function () {
+                            d3.select("#right_svg").select("svg").remove();
                             var d = d3.select(this).datum();
                             open_detail(d);
                         })
@@ -328,7 +345,7 @@ export default {
                             .on("start", dragstarted)
                             .on("drag", dragged)
                             .on("end", dragended));
-                    console.log("circles", circles)
+                    console.log(circles);
                     simulation
                         .nodes(nodes)
                         .on("tick", ticked);
@@ -372,26 +389,34 @@ export default {
                                 that.$nextTick(() => {
                                     Prism.highlightAll()
                                 })
-                                that.dataLine = `${start_line + 1}-${end_line + 1}`;
+                                that.dataline=(start_line + 1) + "-" + (end_line + 1);
                             }
                         }
                         rawFile.send(null);
                     }
+                    function show_basic_block(d) {
+                        if (d["data"]["data"]["line"] && d["data"]["data"]["line_end"]) {
+                            console.log("undo")
+                        }
+                    }             
                     function open_detail(d) {
                         var width_ = width;
                         var height_ = height * 6;
-                        that.dialogTitle = "filename: " + d.filename + "     function: " + d.name;
+                        that.dialogTitle = "filename: " + d.filename + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0function: " + d.name;
                         that.dialogVisible = true;
-                        var svg_g = d3.select("#right_col")
+                        var svg_g = d3.select("#right_svg")
                             .append("svg")
                             .attr("viewBox", "0,0," + width_.toString() + "," + height_.toString())
                             .attr("preserveAspectRatio", "xMidYMid meet")
-                            // .style("width", width_ + 'px')
-                            // .style("height", height_ + 'px')
                             .append("g")
                             .attr("transform",
                                 "translate(" + 0 + "," + 10 + ")");
-
+                        if (svg_g.empty()) {
+                            setTimeout(function() {
+                                open_detail(d);
+                            }, 100);
+                            return; // 在这里结束当前函数的执行，避免继续执行后面的代码
+                        }
                         var entry_block = basic_blocks[d["entry_block"]];
 
                         var first_node = {};
@@ -473,11 +498,39 @@ export default {
                                 }
                                 return d3.interpolateYlOrRd(d["color"] / max_freq);
                             })
+                            .on("click", function (){
+                                var dn = d3.select(this).datum();
+                                show_basic_block(dn);
+                            })
+                            .on("mouseover", function (event) {
+                                var dd= d3.select(this).datum();
+                                 that.displayboxin = 1;
+                                // box显示位置
+                                that.boxpositionin.x = event.x + 10;
+                                that.boxpositionin.y = event.y + 28;
+                                // box显示内容
+                                that.boxvaluein.start_line = dd["data"]["data"]["line"];
+                                that.boxvaluein.end_line = dd["data"]["data"]["line_end"];
+                                that.boxvaluein.frequency = dd["freq"];
+                            })
+                            .on("mouseout", function () {
+                                that.displayboxin = 0;
+                            });
                         var exit = node.exit();
                         exit.remove();
-
-
-
+                        svg_g
+                            .attr("class", "links")
+                            .selectAll("line")
+                            .data(links)
+                            .enter().append("line")
+                            .attr('marker-end', 'url(#end)')
+                            .attr('stroke', '#999')
+                            .attr('stroke-opacity', 0.6)
+                            .attr("x1", function (d) { return d.source.x; })
+                            .attr("y1", function (d) { return d.source.y; })
+                            .attr("x2", function (d) { return d.target.x; })
+                            .attr("y2", function (d) { return d.target.y; });
+                        
                         show_file(d["filename"], d["line"], d["line_end"]);
                     }
                     function search(queue, child) {
@@ -591,8 +644,26 @@ export default {
     margin: 0;
     padding: 0;
     font-size: 16px;
+    z-index: 9999;
+}
+#left_col pre {
+    overflow: initial !important;
+}
+.row {
+    display: flex;
+}
+.col-md-8 {
+    flex: 2;
+}
+.col-md-4 {
+    flex: 1;
 }
 
+.svgContainer svg {
+     width: 100%;
+    z-index: 9998;
+    display: block; /* 确保显示 */
+}
 /* .modal-dialog {
     width: 80%;
     margin: 10% auto;
