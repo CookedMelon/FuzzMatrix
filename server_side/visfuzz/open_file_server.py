@@ -1,57 +1,63 @@
 #!/usr/bin/env python3
-from http.server import HTTPServer, SimpleHTTPRequestHandler, test, BaseHTTPRequestHandler
-from os import curdir
+import aiohttp
+from aiohttp import web
 import os
 import random
 import sys
-import logging
 import json
 
 MIN_PATH = '/out/min_queue'
 
+async def handle_get(request):
+    path = request.match_info.get('path', "")
+    if path == "/out/queue/seeds":
+        dic = {}
+        counter = 0
+        files = os.listdir(os.curdir + MIN_PATH)
+        for file in files:
+            if counter == 3:
+                break
+            if not os.path.isdir(file):
+                with open(os.curdir + MIN_PATH + "/" + file, 'rb') as f:
+                    try:
+                        file_context = f.read()
+                        dic[counter] = str(file_context)
+                        counter += 1
+                    except Exception as e:
+                        print(str(e))
+        print(dic)
+        return web.Response(text=json.dumps(dic), content_type='application/json')
+    # 处理特定路径 'block_freq.json?_=...'
+    else:
+        # 如果path为static.json或以out/fuzzer_stats开头或以out/block_freq.json开头
+        # if path == 'static.json' or path.startswith('out/fuzzer_stats') or path.startswith('out/block_freq.json'):
+        #     return web.FileResponse(os.curdir + '/'+path)
+        # # 其余的404
+        # else:
+        #     return web.Response(status=404)
 
-class CORSRequestHandler(SimpleHTTPRequestHandler):
-    def do_GET(self):
-        print(self.path)
-        if self.path == '/out/queue/seeds':
-            dic = {}
-            counter = 0
-            files = os.listdir(curdir + MIN_PATH)
-            for file in files:
-                if counter == 3:
-                    break
-                if not os.path.isdir(file):
-                    with open(curdir + MIN_PATH + "/" + file, 'rb') as f:
-                        try:
-                            file_context = f.read()
-                            dic[counter] = str(file_context)
-                            counter += 1
-                        except:
-                            print(file_context)
-            print(dic)
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps(dic).encode())
-            # self.send_response(200)
-        else:
-            super(CORSRequestHandler, self).do_GET()
+        # 为了方便测试，直接返回路径下全部文件
+        return web.FileResponse(os.curdir + '/'+path)
 
-    def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        body = self.rfile.read(content_length)
-        path = curdir + '/out/queue/' + ''.join(
-            [str(random.randint(0, 9)) for _ in range(10)])
-        with open(path, 'w') as f:
-            f.write(body.decode())
-        self.send_response(200)
+async def handle_post(request):
+    data = await request.read()
+    path = os.curdir + '/out/queue/' + ''.join([str(random.randint(0, 9)) for _ in range(10)])
+    with open(path, 'wb') as f:
+        f.write(data)
+    return web.Response(status=200)
 
-    def end_headers(self):
-        self.send_header('Access-Control-Allow-Origin', '*')
-        SimpleHTTPRequestHandler.end_headers(self)
+async def cors_middleware(app, handler):
+    async def cors_handler(request):
+        response = await handler(request)
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+    return cors_handler
 
+app = web.Application()
+app.router.add_get('/{path:.*}', handle_get)
+app.router.add_post('/queue', handle_post)
+app.middlewares.append(cors_middleware)
 
 if __name__ == '__main__':
-    test(CORSRequestHandler,
-         HTTPServer,
-         port=int(sys.argv[1]) if len(sys.argv) > 1 else 8000)
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
+    web.run_app(app, port=port)
