@@ -1,8 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/VisFuzzDriver.dir/driver/afl-llvm-rt.o.c.o"
-  "CMakeFiles/VisFuzzDriver.dir/driver/afl-llvm-rt.o.c.o.d"
   "CMakeFiles/VisFuzzDriver.dir/driver/afl_driver.cc.o"
-  "CMakeFiles/VisFuzzDriver.dir/driver/afl_driver.cc.o.d"
   "libVisFuzzDriver.a"
   "libVisFuzzDriver.pdb"
 )

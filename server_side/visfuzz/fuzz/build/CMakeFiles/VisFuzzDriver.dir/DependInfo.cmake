@@ -1,15 +1,26 @@
-
-# Consider dependencies only in project.
-set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
-
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
+  "C"
+  "CXX"
   )
+# The set of files for implicit dependencies of each language:
+set(CMAKE_DEPENDS_CHECK_C
+  "/home/cc/Workspace/FuzzMatrix/server_side/visfuzz/fuzz/llvm/driver/afl-llvm-rt.o.c" "/home/cc/Workspace/FuzzMatrix/server_side/visfuzz/fuzz/build/CMakeFiles/VisFuzzDriver.dir/driver/afl-llvm-rt.o.c.o"
+  )
+set(CMAKE_C_COMPILER_ID "GNU")
 
-# The set of dependency files which are needed:
-set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/llyiyi/fuzz/FuzzMatrix/server_side/visfuzz/fuzz/llvm/driver/afl-llvm-rt.o.c" "CMakeFiles/VisFuzzDriver.dir/driver/afl-llvm-rt.o.c.o" "gcc" "CMakeFiles/VisFuzzDriver.dir/driver/afl-llvm-rt.o.c.o.d"
-  "/home/llyiyi/fuzz/FuzzMatrix/server_side/visfuzz/fuzz/llvm/driver/afl_driver.cc" "CMakeFiles/VisFuzzDriver.dir/driver/afl_driver.cc.o" "gcc" "CMakeFiles/VisFuzzDriver.dir/driver/afl_driver.cc.o.d"
+# The include file search paths:
+set(CMAKE_C_TARGET_INCLUDE_PATH
+  "/usr/lib/llvm-10/include"
+  )
+set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/cc/Workspace/FuzzMatrix/server_side/visfuzz/fuzz/llvm/driver/afl_driver.cc" "/home/cc/Workspace/FuzzMatrix/server_side/visfuzz/fuzz/build/CMakeFiles/VisFuzzDriver.dir/driver/afl_driver.cc.o"
+  )
+set(CMAKE_CXX_COMPILER_ID "GNU")
+
+# The include file search paths:
+set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "/usr/lib/llvm-10/include"
   )
 
 # Targets to which this target links.

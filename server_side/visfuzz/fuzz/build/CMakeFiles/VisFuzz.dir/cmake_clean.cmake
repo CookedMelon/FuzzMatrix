@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
   "CMakeFiles/VisFuzz.dir/plugin.cc.o"
-  "CMakeFiles/VisFuzz.dir/plugin.cc.o.d"
   "libVisFuzz.pdb"
   "libVisFuzz.so"
 )

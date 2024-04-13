@@ -2,7 +2,7 @@
 export DEMO_PATH=$PWD/demo
 export TOOL_PATH=$PWD/visfuzz
 cd $TOOL_PATH/fuzz
-mkdir build
+mkdir -p build
 cd build
 cmake ../llvm/ .
 make
@@ -12,5 +12,5 @@ make
 cd $DEMO_PATH/re2
 bash compile.sh
 cd repo
-mkdir in
+mkdir -p in
 echo a>in/seed
