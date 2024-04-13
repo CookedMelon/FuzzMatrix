@@ -1,2 +1,0 @@
-/usr/bin/ar qc libVisFuzzDriver.a  CMakeFiles/VisFuzzDriver.dir/driver/afl_driver.cc.o CMakeFiles/VisFuzzDriver.dir/driver/afl-llvm-rt.o.c.o
-/usr/bin/ranlib libVisFuzzDriver.a
