@@ -5,7 +5,7 @@
     active-text-color="#ffd04b"
     @select="handleSelect">
     <img src="../assets/logo.png" class="logo" style="height:50%"/>
-    <h1 class="title" style="font-size: 24px;"><span style="color:#57caeb">FuzzVis</span> &nbsp; A user-friendly fuzzing vulnerability mining system</h1>
+    <h1 class="title" style="font-size: 24px;"><span style="color:#57caeb">FuzzMatrix</span> &nbsp; A user-friendly fuzzing vulnerability mining system</h1>
 </el-menu>
     <!-- <div :style="{'background-image': 'url(' + require('../assets/logo.png') + ')', 'width': '100%', 'height': '75px', 'background-size': 'cover'}">  -->
 <!-- <h1>{{ msg }}</h1>
