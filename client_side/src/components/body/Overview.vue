@@ -1,15 +1,17 @@
 <template>
-    <div class="page-container">
-      <div class="chart-container" style="width: 70%;">
-        <h1 class="chart-title">Chart</h1>
-        <div class="chart-wrapper">
-          <canvas id="pathChart" :style="{ height: chartHeight }"></canvas>
-        </div>
+    <div style="height:100%;display:flex;flex-direction:row">
+      <div class="chart-container" style="flex:2;height:100%;">
+        <el-card class="info-box">
+            <h2 class="info-title" style="margin-top:0">Chart</h2>
+            <div class="chart-wrapper">
+                <canvas id="pathChart"></canvas>
+            </div>
+        </el-card>
       </div>
-      <div class="info-container" style="width: 30%">
-        <div class="info-box">
-          <h2 class="info-title">Information</h2>
-          <ul class="info-list">
+      <div class="info-container" style="flex:1;height:100%;">
+        <el-card class="info-box">
+          <h2 class="info-title" style="margin-top:0">Information</h2>
+          <ul class="info-list" id="pathInfo" style="padding:20px;">
             <li><span class="info-label">Run Time:</span> <span class="info-value">{{ chartData.run_time }}</span></li>
             <li><span class="info-label">Cycles Done:</span> <span class="info-value">{{ chartData.cycles_done }}</span></li>
             <li><span class="info-label">Last New Path:</span> <span class="info-value">{{ chartData.last_path }}</span></li>
@@ -24,8 +26,8 @@
             <li><span class="info-label">Max Depth:</span> <span class="info-value">{{ chartData.max_depth }}</span></li>
             <li><span class="info-label">Command Line:</span> <span class="info-value">{{ chartData.command_line }}</span></li>
           </ul>
-        </div>
-      </div>
+        </el-card>
+    </div>
     </div>
   </template>
   
@@ -69,10 +71,11 @@
   
       let lineChart = null;
       let timer = null;
-  
       // make chart
       const initializeChart = () => {
         const canvas = document.getElementById('pathChart');
+        // canvas的高度填充祖父元素
+        canvas.height = canvas.parentElement.parentElement.clientHeight-10;
         if (!canvas) {
           console.error('Canvas element not found.');
           return;
@@ -102,8 +105,12 @@
                 },
               },
               x: {
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time',
+                },
                 ticks: {
-                  display: false,
+                  display: true,
                 },
                 grid: {
                   display: false,
@@ -173,7 +180,7 @@
         timer = setInterval(() => {
           fetchDataAndUpdateInformation(); 
           fetchDataAndUpdateChart();
-        }, 500); // every 0.5s update
+        }, 5000); // every 5s update
       });
   
       onBeforeUnmount(() => {
@@ -209,7 +216,7 @@
   
   .chart-wrapper {
     width: 100%;
-    height: 600px;
+    height: 100%;
     border: 1px solid #ddd;
     border-radius: 5px;
     overflow: hidden;
@@ -233,25 +240,23 @@
   }
   
   .info-box {
-    margin-top: 60px;
-    background-color: #333;
-    border-radius: 5px;
-    padding: 20px;
+    height: 100%;
     width: 100%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   
   .info-title {
-    margin-bottom: 10px;
     font-weight: bold;
     text-align: center;
     /* color: #1cd6bd; */
-    margin-top: -60px;
   }
   
   .info-list {
     list-style-type: none;
+    border-radius: 5px;
+    background-color: #333;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 0;
+    
   }
   
   .info-list li {
@@ -273,8 +278,8 @@
     font-size: 18px;
     margin-left: 0;
     padding: 5px;
-    background-color: #333;
-    border-radius: 5px;
+    /* background-color: #333;
+    border-radius: 5px; */
   }
   </style>
   
