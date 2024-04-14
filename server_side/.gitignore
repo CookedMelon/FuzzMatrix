@@ -1,1 +1,5 @@
 **/build/
+**/in/
+**/out/
+**/nohub.out
+**/re2/repo
