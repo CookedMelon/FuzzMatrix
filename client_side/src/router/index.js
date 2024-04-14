@@ -20,6 +20,10 @@ const router = createRouter({
                 {path: '/index/Overview',component: () => import('@/components/body/Overview.vue')},
                 {path: '/index/CFG',component: () => import('@/components/body/CFG.vue')},
                 {path: '/index/Seeds',component: () => import('@/components/body/Seeds.vue')},
+                {path: '/index/Terminal-main',component: () => import('@/components/body/Terminal-main.vue')},
+                {path: '/index/Terminal-1',component: () => import('@/components/body/Terminal-1.vue')},
+                {path: '/index/Terminal-2',component: () => import('@/components/body/Terminal-2.vue')},
+                {path: '/index/Terminal-3',component: () => import('@/components/body/Terminal-3.vue')}
             ]
         },
 
