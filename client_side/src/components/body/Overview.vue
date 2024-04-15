@@ -108,13 +108,17 @@
                 scaleLabel: {
                   display: true,
                   labelString: 'Time',
+                  
                 },
                 ticks: {
                   display: true,
+                  callback: function(value) {
+                    return get_time(value);
+                  }
                 },
                 grid: {
-                  display: false,
-                },
+                    borderDash: [5, 10]  // 设置虚线样式
+                }
               },
             },
           },
@@ -123,21 +127,21 @@
   
       // chart data : fetch and update
       const fetchDataAndUpdateChart = async () => {
-        try {
-          const response = await axios.get('/api/out/plot_data?_=' + Math.random());
-          const data = response.data.split('\n').slice(1); // remove old line
-          const pathsTotal = data.map(line => {
-            const values = line.trim().split(/\s+/); 
-            return parseFloat(values[3]);
-          });
-  
-          // update chart data
-          chartData.value.datasets[0].data = pathsTotal;
-          chartData.value.labels = Array.from(Array(pathsTotal.length).keys()).map(() => '');
-          lineChart.update();
-        } catch (error) {
-          console.error('Error fetching and updating data:', error);
-        }
+            try {
+                const response = await axios.get('/api/out/plot_data?_=' + Math.random());
+                const data = response.data.split('\n').slice(1); // remove old line
+                const pathsTotal = data.map(line => {
+                    const values = line.trim().split(/\s+/); 
+                    return parseFloat(values[3]);
+                });
+        
+                // update chart data
+                chartData.value.datasets[0].data = pathsTotal;
+                chartData.value.labels = Array.from(Array(pathsTotal.length).keys()).map(()=>'');
+                lineChart.update();
+            } catch (error) {
+                console.error('Error fetching and updating data:', error);
+            }
       };
       
       // time : xx hour xx min xx sec
@@ -148,7 +152,13 @@
         const seconds = diffSeconds % 60;
         return `${hours} hour ${minutes} min ${seconds} sec`;
       }
-  
+      // get : xx hour xx min xx sec
+      function get_time(time){
+        const hours = Math.floor(time / 3600);
+        const minutes = Math.floor((time % 3600) / 60);
+        // const seconds = time % 60;
+        return `${hours} hour ${minutes} min`;
+      }
       // information data : fetch and update
       const fetchDataAndUpdateInformation = async () => {
         try {
@@ -163,9 +173,9 @@
 
           // Calculate last unique crash
           if (updatedData.last_crash !== undefined && parseInt(updatedData.last_crash) !== 0 && updatedData.last_update !== undefined) {
-              let lastCrashTime = new Date(parseInt(updatedData.last_crash) * 1000);
-              let lastUpdateTime = new Date(parseInt(updatedData.last_update) * 1000);
-              let lastUniqueCrash = show_diff_time(lastUpdateTime - lastCrashTime);
+              let lastCrashTime = parseInt(updatedData.last_crash);
+              let lastUpdateTime = parseInt(updatedData.last_update);
+              let lastUniqueCrash = show_diff_time(lastCrashTime, lastUpdateTime);
               chartData.value.last_unique_crash = lastUniqueCrash;
           } else {
               chartData.value.last_unique_crash = "not yet";
@@ -191,6 +201,8 @@
           chartData.value.max_depth = parseInt(updatedData.max_depth) || chartData.value.max_depth;
           chartData.value.command_line = updatedData.command_line || chartData.value.command_line;
   
+            // 设置lineChart的横坐标时间
+
           lineChart.update();
         } catch (error) {
           console.error('Error fetching and updating data:', error);
