@@ -14,9 +14,9 @@
           <ul class="info-list" id="pathInfo" style="padding:20px;">
             <li><span class="info-label">Run Time:</span> <span class="info-value">{{ chartData.run_time }}</span></li>
             <li><span class="info-label">Cycles Done:</span> <span class="info-value">{{ chartData.cycles_done }}</span></li>
-            <li><span class="info-label">Last New Path:</span> <span class="info-value">{{ chartData.last_path }}</span></li>
+            <li><span class="info-label">Last New Path:</span> <span class="info-value">{{ chartData.last_new_path }}</span></li>
             <li><span class="info-label">Total Path:</span> <span class="info-value">{{ chartData.paths_total }}</span></li>
-            <li><span class="info-label">Last Unique Crash:</span> <span class="info-value">{{ chartData.last_crash }}</span></li>
+            <li><span class="info-label">Last Unique Crash:</span> <span class="info-value">{{ chartData.last_unique_crash }}</span></li>
             <li><span class="info-label">Unique Crashes:</span> <span class="info-value">{{ chartData.unique_crashes }}</span></li>
             <li><span class="info-label">Execs per Second:</span> <span class="info-value">{{ chartData.execs_per_sec }}</span></li>
             <li><span class="info-label">Map Density:</span> <span class="info-value">{{ chartData.map_density }}</span></li>
@@ -139,6 +139,15 @@
           console.error('Error fetching and updating data:', error);
         }
       };
+      
+      // time : xx hour xx min xx sec
+      function show_diff_time(startTime, lastUpdate) {
+        const diffSeconds = lastUpdate - startTime;
+        const hours = Math.floor(diffSeconds / 3600);
+        const minutes = Math.floor((diffSeconds % 3600) / 60);
+        const seconds = diffSeconds % 60;
+        return `${hours} hour ${minutes} min ${seconds} sec`;
+      }
   
       // information data : fetch and update
       const fetchDataAndUpdateInformation = async () => {
@@ -151,11 +160,27 @@
             const [key, value] = line.split(':').map((str) => str.trim());
             updatedData[key] = value;
           }
+
+          // Calculate last unique crash
+          if (updatedData.last_crash !== undefined && parseInt(updatedData.last_crash) !== 0 && updatedData.last_update !== undefined) {
+              let lastCrashTime = new Date(parseInt(updatedData.last_crash) * 1000);
+              let lastUpdateTime = new Date(parseInt(updatedData.last_update) * 1000);
+              let lastUniqueCrash = show_diff_time(lastUpdateTime - lastCrashTime);
+              chartData.value.last_unique_crash = lastUniqueCrash;
+          } else {
+              chartData.value.last_unique_crash = "not yet";
+          }
+          
+          chartData.value.run_time = show_diff_time(parseInt(updatedData.start_time), parseInt(updatedData.last_update)) || chartData.value.run_time;
+          chartData.value.last_new_path = show_diff_time(parseInt(updatedData.last_path), parseInt(updatedData.last_update),) || chartData.value.run_time;
+
+          // chartData.value.last_path = show_diff_time(parseInt(updatedData.last_path) || chartData.value.last_path);
+          // chartData.value.last_crash = show_diff_time(parseInt(updatedData.last_crash) || chartData.value.last_crash);
           // chartData.value.run_time = updatedData.run_time || chartData.value.run_time;
-          chartData.value.run_time = updatedData.start_time || chartData.value.start_time;
+          // chartData.value.run_time = updatedData.start_time || chartData.value.start_time;
           chartData.value.cycles_done = parseInt(updatedData.cycles_done) || chartData.value.cycles_done;
-          chartData.value.last_path = parseInt(updatedData.last_path) || chartData.value.last_path;
-          chartData.value.last_crash = parseInt(updatedData.last_crash) || chartData.value.last_crash;
+          // chartData.value.last_path = parseInt(updatedData.last_path) || chartData.value.last_path;
+          // chartData.value.last_crash = parseInt(updatedData.last_crash) || chartData.value.last_crash;
           chartData.value.unique_crashes = parseInt(updatedData.unique_crashes) || chartData.value.unique_crashes;
           chartData.value.paths_total = parseInt(updatedData.paths_total) || chartData.value.paths_total;
           chartData.value.execs_per_sec = parseFloat(updatedData.execs_per_sec) || chartData.value.execs_per_sec;
