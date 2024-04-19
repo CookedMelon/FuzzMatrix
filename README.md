@@ -70,6 +70,8 @@ filetree
 
 ```base
 cd server_side
+go mod tidy
+go build
 ./build.sh
 ./run.sh
 ```
