@@ -20,9 +20,11 @@
 
                   <!-- 动态生成的终端菜单项 -->
                   <el-menu-item 
-                    v-for="(item, index) in terminalItems" :key="index" :index="'term-' + index"
+                    v-for="(item, index) in terminalItems" :key="index" :index="'term-' + (index + 1)"
                     v-on:click="$router.push('/index/Terminal-'+ (index + 1))"
-                    >
+                    v-to="'/index/Terminal-'+ (index + 1)"
+                    @click="dialogFormVisible = true"   
+                    > 
                     <el-icon><postcard /></el-icon>
                     {{ item }}                    
                   </el-menu-item>
@@ -50,7 +52,9 @@ export default {
   data() {
     return {
       activeIndex: '1',
-      terminalItems: [], // 用于存储动态生成的终端菜单项
+      terminalItems: [
+        'Terminal-1'
+      ], // 用于存储动态生成的终端菜单项
     };
   },
   methods: {
