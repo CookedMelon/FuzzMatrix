@@ -6,10 +6,10 @@ import threading
 import time
 
 # 配置服务器信息
-HOSTS = "101.43.116.52"
+HOSTS = ""
 PORT = 22
-USERNAME = "ubuntu"
-PASSWORD = "wsxz217805."
+USERNAME = ""
+PASSWORD = ""
 
 
 class MyThread(threading.Thread):
@@ -17,7 +17,12 @@ class MyThread(threading.Thread):
         threading.Thread.__init__(self)
         self.chan = chan
 
+
     def run(self):
+        # 在新线程中创建事件循环
+        tornado.ioloop.IOLoop().make_current()
+        self.ioloop = tornado.ioloop.IOLoop.current()
+
         while not self.chan.chan.exit_status_ready():
             time.sleep(0.1)
             try:
