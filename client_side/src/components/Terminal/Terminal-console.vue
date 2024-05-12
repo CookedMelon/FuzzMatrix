@@ -48,3 +48,11 @@ beforeUnmount () {
 }
 }
 </script>
+
+<style scoped>
+.console#terminal {
+  width: 100%;
+  height: 100%;
+}
+</style>
+

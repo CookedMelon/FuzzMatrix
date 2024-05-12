@@ -1,19 +1,19 @@
 <template>
   <div class="container">
-    <terminal-main></terminal-main>
+    <!-- <terminal-main></terminal-main> -->
     <my-terminal></my-terminal>
   </div>
 </template>
 
 <script>
-import Console from './Console'
-import TerminalMain from './Terminal-main.vue'
+import Console from './Terminal-console'
+// import TerminalMain from './Terminal-main.vue'
 
 export default {
   name: 'Terminal-1',
   components: {
     'my-terminal': Console,
-    'terminal-main': TerminalMain
+    // 'terminal-main': TerminalMain
   },
   mounted() {
     // 连接到 WebSocket 服务器

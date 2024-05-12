@@ -17,11 +17,11 @@ const router = createRouter({
             redirect: '/index/Overview',
             component: () => import('@/components/Index.vue'),
             children:[
-                {path: '/index/Overview',component: () => import('@/components/body/Overview.vue')},
-                {path: '/index/CFG',component: () => import('@/components/body/CFG.vue')},
-                {path: '/index/Seeds',component: () => import('@/components/body/Seeds.vue')},
-                {path: '/index/Terminal-main',component: () => import('@/components/body/Terminal-main.vue')},
-                {path: '/index/Terminal-1',component: () => import('@/components/body/Terminal-1.vue')}
+                {path: '/index/Overview',component: () => import('@/components/Overview/Overview.vue')},
+                {path: '/index/CFG',component: () => import('@/components/CFG/CFG.vue')},
+                {path: '/index/Seeds',component: () => import('@/components/Seeds/Seeds.vue')},
+                {path: '/index/Terminal-main',component: () => import('@/components/Terminal/Terminal-main.vue')},
+                {path: '/index/Terminal-1',component: () => import('@/components/Terminal/Terminal-1.vue')}
             ]
         },
 
