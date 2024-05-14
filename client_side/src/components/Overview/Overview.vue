@@ -12,19 +12,19 @@
         <el-card class="info-box">
           <h2 class="info-title" style="margin-top:0">Information</h2>
           <ul class="info-list" id="pathInfo" style="padding:20px;">
-            <li><span class="info-label">Run Time:</span> <span class="info-value">{{ chartData.run_time }}</span></li>
-            <li><span class="info-label">Cycles Done:</span> <span class="info-value">{{ chartData.cycles_done }}</span></li>
-            <li><span class="info-label">Last New Path:</span> <span class="info-value">{{ chartData.last_new_path }}</span></li>
-            <li><span class="info-label">Total Path:</span> <span class="info-value">{{ chartData.paths_total }}</span></li>
-            <li><span class="info-label">Last Unique Crash:</span> <span class="info-value">{{ chartData.last_unique_crash }}</span></li>
-            <li><span class="info-label">Unique Crashes:</span> <span class="info-value">{{ chartData.unique_crashes }}</span></li>
-            <li><span class="info-label">Execs per Second:</span> <span class="info-value">{{ chartData.execs_per_sec }}</span></li>
-            <li><span class="info-label">Map Density:</span> <span class="info-value">{{ chartData.map_density }}</span></li>
-            <li><span class="info-label">Execs Done:</span> <span class="info-value">{{ chartData.execs_done }}</span></li>
-            <li><span class="info-label">Stability:</span> <span class="info-value">{{ chartData.stability }}</span></li>
-            <li><span class="info-label">Execs Timeout:</span> <span class="info-value">{{ chartData.exec_timeout }}</span></li>
-            <li><span class="info-label">Max Depth:</span> <span class="info-value">{{ chartData.max_depth }}</span></li>
-            <li><span class="info-label">Command Line:</span> <span class="info-value">{{ chartData.command_line }}</span></li>
+            <li><b class="info-label">Run Time:</b> <span class="info-value">{{ chartData.run_time }}</span></li>
+            <li><b class="info-label">Cycles Done:</b> <span class="info-value">{{ chartData.cycles_done }}</span></li>
+            <li><b class="info-label">Last New Path:</b> <span class="info-value">{{ chartData.last_new_path }}</span></li>
+            <li><b class="info-label">Total Path:</b> <span class="info-value">{{ chartData.paths_total }}</span></li>
+            <li><b class="info-label">Last Unique Crash:</b> <span class="info-value">{{ chartData.last_unique_crash }}</span></li>
+            <li><b class="info-label">Unique Crashes:</b> <span class="info-value">{{ chartData.unique_crashes }}</span></li>
+            <li><b class="info-label">Execs per Second:</b> <span class="info-value">{{ chartData.execs_per_sec }}</span></li>
+            <li><b class="info-label">Map Density:</b> <span class="info-value">{{ chartData.map_density }}</span></li>
+            <li><b class="info-label">Execs Done:</b> <span class="info-value">{{ chartData.execs_done }}</span></li>
+            <li><b class="info-label">Stability:</b> <span class="info-value">{{ chartData.stability }}</span></li>
+            <li><b class="info-label">Execs Timeout:</b> <span class="info-value">{{ chartData.exec_timeout }}</span></li>
+            <li><b class="info-label">Max Depth:</b> <span class="info-value">{{ chartData.max_depth }}</span></li>
+            <li><b class="info-label">Command Line:</b> <span class="info-value">{{ chartData.command_line }}</span></li>
           </ul>
         </el-card>
     </div>
@@ -290,7 +290,7 @@
   .info-list {
     list-style-type: none;
     border-radius: 5px;
-    background-color: #333;
+    background-color: #90939950;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 0;
     
@@ -300,18 +300,18 @@
     margin-bottom: 15px;
     font-size: 18px;
     line-height: 1.5;
-    color: #fff;
+    color: black;
     text-align: left;
   }
   
   .info-label {
-    color: #1cd6bd;
+    color: black;
     font-size: 18px;
     margin-right: 5px;
   }
   
   .info-value {
-    color: #fff;
+    color: black;
     font-size: 18px;
     margin-left: 0;
     padding: 5px;
