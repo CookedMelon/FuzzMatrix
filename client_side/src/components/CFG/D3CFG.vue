@@ -30,11 +30,11 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-8" id="left_col" style="height: 600px; overflow: scroll;"  ref="leftCol">
+                    <div class="col-md-8" id="left_col" style="height: 600px; overflow: scroll;flex: 1"  ref="leftCol">
                         <pre><code class="language-clike line-numbers">{{ codeText }}</code></pre>
                     </div>
-                    <div class="col-md-4" id="right_col">
-                        <div class="svgContainer" style="height: 600px;overflow: scroll" id="right_svg">
+                    <div class="col-md-8" id="right_col" style="flex: 1">
+                        <div class="svgContainer" id="right_svg">
                         </div>
                     </div>
                 </div>
@@ -157,7 +157,7 @@ export default {
                 .attr("orient", "auto")
                 .append("svg:path")
                 .attr("d", "M0,-5L10,0L0,5")
-                .style("fill", "#999")
+                .style("fill", "#666")
                 .style("opacity", "0.7");
 
             // 所有的节点和边都存在一个g标签下
@@ -167,19 +167,6 @@ export default {
                 .on("zoom", zoom);
 
             root.call(zoomListener);  // 应用 zoom 行为到 root 上，这里的 root 应该是一个 SVG 或类似的容器元素
-
-
-            // 不知道为什么有缩放问题，中心不匹配
-            // function centerNode(source, svg, zoomListener, viewerWidth, viewerHeight) {
-            //     var t = d3.zoomTransform(svg.node());
-            //     var x = -source.x;
-            //     var y = -source.y;
-            //     x = x * t.k + viewerWidth / 2;
-            //     y = y * t.k + viewerHeight / 2;
-            //     svg.transition().duration(1000)
-            //         .call(zoomListener.transform, d3.zoomIdentity.translate(x, y).scale(t.k));
-            // }
-
 
             function zoom(event) {  // 注意这里要接收一个 event 参数
                 // console.log('event.transform',event.transform)
@@ -198,7 +185,7 @@ export default {
 
             var simulation = d3.forceSimulation()
                 .force("link", d3.forceLink().id(function (d) { return d.id; }))
-                .force("charge", d3.forceManyBody().strength(-10))
+                .force("charge", d3.forceManyBody().strength(-15))
                 .force("center", d3.forceCenter(width / 2, height / 2));
 
             var entry_function = null;
@@ -290,15 +277,16 @@ export default {
                             explored_functions[key]["color"] = Math.log2(explored_functions[key]["freq"]) / Math.log2(max_freq);
                         }
                     }
+                    
                     var link_enter = svg_link
                         .selectAll("line")
                         .data(links)
                         .enter()
                         .append("line")
                         .attr('marker-end', 'url(#end)')
-                        .attr('stroke', '#999')
+                        .attr('stroke', '#666')
                         .attr('stroke-opacity', 0.6)
-                    // .attr("stroke-width", function (d) { return Math.sqrt(d.value); });
+                    .attr("stroke-width", function (d) { return Math.sqrt(d.value); });
 
                     var node_enter = svg_node
                         .selectAll("g")
@@ -315,14 +303,14 @@ export default {
                         })
                         .attr("stroke", function (d) {
                             if (d["name"] == "LLVMFuzzerTestOneInput") {
-                                return "purple";
+                                return "#23459A";
                             }
                             else {
                                 return "white";
                             }
-                        })
-                        .attr("stroke-width", "3px")
-                        .attr("fill", function (d) { return d3.interpolatePiYG(1 - d["color"]); })
+                        })// 节点边缘颜色
+                        .attr("stroke-width", "2px")// 节点边缘
+                        .attr("fill", function (d) { return d3.interpolateGnBu(d["color"]); })// 节点颜色样式
                         .on("mouseover", function (event, d) {  // 注意这里的参数变化，现在事件对象作为第一个参数
                             that.displaybox = 1;
                             // box显示位置
@@ -339,7 +327,9 @@ export default {
                         .on("dblclick", function () {
                             d3.select("#right_svg").select("svg").remove();
                             var d = d3.select(this).datum();
-                            open_detail(d);
+                            that.$nextTick(() => {
+                                open_detail(d);// 延时保证dom加载完成
+                            });
                         })
                         .call(d3.drag()
                             .on("start", dragstarted)
@@ -394,145 +384,164 @@ export default {
                         }
                         rawFile.send(null);
                     }
-                    function show_basic_block(d) {
-                        if (d["data"]["data"]["line"] && d["data"]["data"]["line_end"]) {
-                            console.log("undo")
-                        }
-                    }             
+                    // function show_basic_block(d) {
+                    //     if (d["data"]["data"]["line"] && d["data"]["data"]["line_end"]) {
+                    //         console.log("undo")
+                    //     }
+                    // }             
                     function open_detail(d) {
-                        var width_ = width;
-                        var height_ = height * 6;
-                        that.dialogTitle = "filename: " + d.filename + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0function: " + d.name;
+                        that.dialogTitle = "filename: " + d.filename + "    function: " + d.name;
                         that.dialogVisible = true;
-                        var svg_g = d3.select("#right_svg")
-                            .append("svg")
-                            .attr("viewBox", "0,0," + width_.toString() + "," + height_.toString())
-                            .attr("preserveAspectRatio", "xMidYMid meet")
-                            .append("g")
-                            .attr("transform",
-                                "translate(" + 0 + "," + 10 + ")");
-                        if (svg_g.empty()) {
-                            setTimeout(function() {
-                                open_detail(d);
-                            }, 100);
-                            return; // 在这里结束当前函数的执行，避免继续执行后面的代码
-                        }
-                        var entry_block = basic_blocks[d["entry_block"]];
 
-                        var first_node = {};
-                        first_node["data"] = entry_block;
-                        first_node["children"] = [];
-                        var links = [];
-                        var visited = Array(basic_blocks.length).fill(false);
-                        var stack = [first_node];
-                        visited[parseInt(entry_block["id"])] = true;
-                        while (stack.length != 0) {
-                            var new_node = stack.pop();
-                            new_node["data"]["successors"].forEach(function (x) {
-                                if (!visited[x]) {
-                                    visited[x] = true;
-                                    var tree_node = {};
-                                    tree_node["data"] = basic_blocks[x];
-                                    tree_node["children"] = [];
-                                    new_node["children"].push(tree_node);
-                                    stack.push(tree_node);
-                                }
-                            });
-                        }
-                        var nodes = d3.hierarchy(first_node);
-                        nodes = d3.tree().size([width_, height_])(nodes);
-                        var map = {};
-                        dfs(nodes, map);
-                        visited = Array(basic_blocks.length).fill(false);
-                        stack.push(entry_block);
-                        visited[d["entry_block"]] = true;
-                        while (stack.length != 0) {
-                            var new2_node = stack.pop();
-                            new2_node["successors"].forEach(function (x) {
-                                if (!visited[x]) {
-                                    visited[x] = true;
-                                    stack.push(basic_blocks[x]);
-                                }
-                                var edge = {};
-                                edge["source"] = map[parseInt(new2_node["id"])];
-                                edge["target"] = map[x];
-                                links.push(edge);
-                            });
-                        }
-                        var fix_height = 30;
-                        var circle_r = 8;
-                        // if (nodes["height"] > 20) {
-                        //     fix_height = 650 / nodes["height"];
-                        //     circle_r = 3;
-                        // }
-                        nodes = nodes.descendants();
-                        var max_freq = 0;
-                        nodes.forEach(function (d) {
-                            d.y = d.depth * fix_height;
-                            d["freq"] = block_freq[parseInt(d["data"]["data"]["id"])];
-                            d["color"] = d["freq"];
-                            if (max_freq < d["color"]) {
-                                max_freq = d["color"];
+                        that.$nextTick(() => {
+                            var height = document.getElementById('right_col').clientHeight;
+                            var width = document.getElementById('right_col').clientWidth;
+
+                            var svg = d3.select("#right_svg")
+                                .append("svg")
+                                .attr("width", width)
+                                .attr("height", height)
+                                .attr("viewBox", `0 0 ${width} ${height}`)
+                                .attr("preserveAspectRatio", "xMidYMid meet");
+
+                            var svg_g = svg.append("g")
+                                .attr("transform", "translate(0,10)");
+
+                            var zoom = d3.zoom()
+                                .scaleExtent([0.1, 3])  // 设置缩放比例范围
+                                .on("zoom", (event) => {
+                                    svg_g.attr("transform", event.transform);
+                                });
+
+                            svg.call(zoom);
+
+                            var entry_block = basic_blocks[d["entry_block"]];
+                            var first_node = { "data": entry_block, "children": [] };
+
+                            var links = [];
+                            var visited = Array(basic_blocks.length).fill(false);
+                            var stack = [first_node];
+                            visited[parseInt(entry_block["id"])] = true;
+
+                            while (stack.length !== 0) {
+                                var new_node = stack.pop();
+                                new_node["data"]["successors"].forEach(function (x) {
+                                    if (!visited[x]) {
+                                        visited[x] = true;
+                                        var tree_node = { "data": basic_blocks[x], "children": [] };
+                                        new_node["children"].push(tree_node);
+                                        stack.push(tree_node);
+                                    }
+                                });
                             }
-                        });
-                        // var node = svg.selectAll("g.node")
-                        //     .data(nodes);
-                        // adds each node as a group
-                        var node = svg_g.selectAll(".node")
-                            .data(nodes)
-                            .enter().append("g")
-                            .attr("class", function (d) {
-                                return "node" +
-                                    (d.children ? " node--internal" : " node--leaf");
-                            })
-                            .attr("transform", function (d) {
-                                return "translate(" + d.x + "," + d.y + ")";
-                            });
-                        // adds the circle to the node
-                        node.append("circle")
-                            .attr("r", circle_r)
-                            .attr("stroke", "black")
-                            .attr("fill", function (d) {
-                                if (max_freq == 0) {
-                                    return d3.interpolateYlOrRd(0);
+
+                            var nodes = d3.hierarchy(first_node);
+                            nodes = d3.tree().size([height, width])(nodes);
+                            var map = {};
+                            dfs(nodes, map);
+                            visited = Array(basic_blocks.length).fill(false);
+                            stack.push(entry_block);
+                            visited[d["entry_block"]] = true;
+
+                            while (stack.length !== 0) {
+                                var new2_node = stack.pop();
+                                new2_node["successors"].forEach(function (x) {
+                                    if (!visited[x]) {
+                                        visited[x] = true;
+                                        stack.push(basic_blocks[x]);
+                                    }
+                                    var edge = { "source": map[parseInt(new2_node["id"])], "target": map[x] };
+                                    links.push(edge);
+                                });
+                            }
+
+                            var fix_height = 30;
+                            var circle_r = 8;
+                            nodes = nodes.descendants();
+                            var max_freq = 0;
+                            nodes.forEach(function (d) {
+                                d.y = d.depth * fix_height;
+                                d["freq"] = block_freq[parseInt(d["data"]["data"]["id"])];
+                                d["color"] = d["freq"];
+                                if (max_freq < d["color"]) {
+                                    max_freq = d["color"];
                                 }
-                                return d3.interpolateYlOrRd(d["color"] / max_freq);
-                            })
-                            .on("click", function (){
-                                var dn = d3.select(this).datum();
-                                show_basic_block(dn);
-                            })
-                            .on("mouseover", function (event) {
-                                var dd= d3.select(this).datum();
-                                 that.displayboxin = 1;
-                                // box显示位置
-                                that.boxpositionin.x = event.x + 10;
-                                that.boxpositionin.y = event.y + 28;
-                                // box显示内容
-                                that.boxvaluein.start_line = dd["data"]["data"]["line"];
-                                that.boxvaluein.end_line = dd["data"]["data"]["line_end"];
-                                that.boxvaluein.frequency = dd["freq"];
-                            })
-                            .on("mouseout", function () {
-                                that.displayboxin = 0;
                             });
-                        var exit = node.exit();
-                        exit.remove();
-                        svg_g
-                            .attr("class", "links")
-                            .selectAll("line")
-                            .data(links)
-                            .enter().append("line")
-                            .attr('marker-end', 'url(#end)')
-                            .attr('stroke', '#999')
-                            .attr('stroke-opacity', 0.6)
-                            .attr("x1", function (d) { return d.source.x; })
-                            .attr("y1", function (d) { return d.source.y; })
-                            .attr("x2", function (d) { return d.target.x; })
-                            .attr("y2", function (d) { return d.target.y; });
-                        
-                        show_file(d["filename"], d["line"], d["line_end"]);
+
+                            var node = svg_g.selectAll(".node")
+                                .data(nodes)
+                                .enter().append("g")
+                                .attr("class", function (d) {
+                                    return "node" + (d.children ? " node--internal" : " node--leaf");
+                                })
+                                .attr("transform", function (d) {
+                                    return "translate(" + d.x + "," + d.y + ")";
+                                });
+
+                            node.append("circle")
+                                .attr("r", circle_r)
+                                .attr("stroke", "black")
+                                .attr("fill", function (d) {
+                                    if (max_freq === 0) {
+                                        return d3.interpolateYlOrRd(0);
+                                    }
+                                    return d3.interpolateYlOrRd(d["color"] / max_freq);
+                                })
+                                .on("click", function (event) {
+                                    event.sourceEvent.stopPropagation();
+                                })
+                                .on("dblclick", function (event) {
+                                    event.sourceEvent.stopPropagation();
+                                })
+                                .on("mouseover", function (event) {
+                                    var dd = d3.select(this).datum();
+                                    that.displayboxin = 1;
+                                    that.boxpositionin.x = event.x + 10;
+                                    that.boxpositionin.y = event.y + 28;
+                                    that.boxvaluein.start_line = dd["data"]["data"]["line"];
+                                    that.boxvaluein.end_line = dd["data"]["data"]["line_end"];
+                                    that.boxvaluein.frequency = dd["freq"];
+                                })
+                                .on("mouseout", function () {
+                                    that.displayboxin = 0;
+                                })
+                                .call(d3.drag()
+                                    .on("start", function (event, d) {
+                                        event.sourceEvent.stopPropagation();
+                                        dragstarted(event, d);
+                                    })
+                                    .on("drag", function (event, d) {
+                                        event.sourceEvent.stopPropagation();
+                                        dragged(event, d);
+                                    })
+                                    .on("end", function (event, d) {
+                                        event.sourceEvent.stopPropagation();
+                                        dragended(event, d);
+                                    }));
+
+                            svg_g.attr("class", "links")
+                                .selectAll("path")
+                                .data(links)
+                                .enter().append("path")
+                                .attr('stroke', function (d) {
+                                    return d.target.color ? d3.interpolateYlOrRd(d.target.color) : '#666';
+                                })
+                                .attr('fill', 'none')
+                                .attr('stroke-opacity', 0.6)
+                                .attr('stroke-width', 1.5)
+                                .attr("d", d3.linkHorizontal()
+                                    .x(function (d) {
+                                        return d.x;
+                                    })
+                                    .y(function (d) {
+                                        return d.y;
+                                    }));
+
+                            show_file(d["filename"], d["line"], d["line_end"]);
+                        });
                     }
+
+
                     function search(queue, child) {
                         // console.log("child",child)
                         // console.log("functions[child]",functions[child])
@@ -658,11 +667,22 @@ export default {
 .col-md-4 {
     flex: 1;
 }
+.svgContainer {
+    width: 100%;
+    height: 600px;
+    /* overflow-x: scroll;
+    overflow-y: hidden; */
+}
+/* .svgContainer svg {
+    width: 100%;
+    z-index: 9998;
+    display: block; 
+} */
 
 .svgContainer svg {
-     width: 100%;
-    z-index: 9998;
-    display: block; /* 确保显示 */
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 /* .modal-dialog {
     width: 80%;

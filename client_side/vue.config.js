@@ -2,6 +2,7 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
+    hot: true, // 启用热重载
     proxy: {
       // 代理配置
       '/api': {
