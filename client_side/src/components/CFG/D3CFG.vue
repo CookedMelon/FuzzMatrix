@@ -487,12 +487,6 @@ export default {
                                     }
                                     return d3.interpolateYlOrRd(d["color"] / max_freq);
                                 })
-                                .on("click", function (event) {
-                                    event.sourceEvent.stopPropagation();
-                                })
-                                .on("dblclick", function (event) {
-                                    event.sourceEvent.stopPropagation();
-                                })
                                 .on("mouseover", function (event) {
                                     var dd = d3.select(this).datum();
                                     that.displayboxin = 1;
@@ -504,20 +498,7 @@ export default {
                                 })
                                 .on("mouseout", function () {
                                     that.displayboxin = 0;
-                                })
-                                .call(d3.drag()
-                                    .on("start", function (event, d) {
-                                        event.sourceEvent.stopPropagation();
-                                        dragstarted(event, d);
-                                    })
-                                    .on("drag", function (event, d) {
-                                        event.sourceEvent.stopPropagation();
-                                        dragged(event, d);
-                                    })
-                                    .on("end", function (event, d) {
-                                        event.sourceEvent.stopPropagation();
-                                        dragended(event, d);
-                                    }));
+                                });
 
                             svg_g.attr("class", "links")
                                 .selectAll("path")
