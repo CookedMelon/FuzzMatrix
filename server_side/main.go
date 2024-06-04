@@ -332,23 +332,23 @@ func getSeeds(w http.ResponseWriter, r *http.Request) {
 // }
 
 func handleSeedRequest(w http.ResponseWriter, r *http.Request) {
-    body, err := io.ReadAll(r.Body)
-    if err != nil {
-        log.Printf("Error reading request body: %v", err)
-        http.Error(w, "Internal server error", http.StatusInternalServerError)
-        return
-    }
-    log.Printf("Request body: %s", string(body))
-
-    var requestData map[string]interface{}
-    if err := json.Unmarshal(body, &requestData); err != nil {
-        log.Printf("Error parsing request body: %v", err)
-        http.Error(w, "Invalid request payload", http.StatusBadRequest)
-        return
-    }
-
     switch r.Method {
     case "PUT":
+        body, err := io.ReadAll(r.Body)
+        if err != nil {
+            log.Printf("Error reading request body: %v", err)
+            http.Error(w, "Internal server error", http.StatusInternalServerError)
+            return
+        }
+        log.Printf("Request body: %s", string(body))
+
+        var requestData map[string]interface{}
+        if err := json.Unmarshal(body, &requestData); err != nil {
+            log.Printf("Error parsing request body: %v", err)
+            http.Error(w, "Invalid request payload", http.StatusBadRequest)
+            return
+        }
+
         seedName, ok := requestData["name"].(string)
         if !ok {
             log.Printf("Invalid seed name in request body")
@@ -379,6 +379,21 @@ func handleSeedRequest(w http.ResponseWriter, r *http.Request) {
         deleteSeed(w, r, seedPath)
 
     case "POST":
+        body, err := io.ReadAll(r.Body)
+        if err != nil {
+            log.Printf("Error reading request body: %v", err)
+            http.Error(w, "Internal server error", http.StatusInternalServerError)
+            return
+        }
+        log.Printf("Request body: %s", string(body))
+
+        var requestData map[string]interface{}
+        if err := json.Unmarshal(body, &requestData); err != nil {
+            log.Printf("Error parsing request body: %v", err)
+            http.Error(w, "Invalid request payload", http.StatusBadRequest)
+            return
+        }
+
         content, ok := requestData["content"].(string)
         if !ok {
             log.Printf("Invalid content in request body")
@@ -393,6 +408,7 @@ func handleSeedRequest(w http.ResponseWriter, r *http.Request) {
         http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
     }
 }
+
 
 
 
