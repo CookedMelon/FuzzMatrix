@@ -74,7 +74,7 @@ const ChartOption = {
                     return "Path Number: " + params.data + "\nTime: " + params.name;
                 },
                 // 颜色
-                color: "blue",
+                color: "#5C7BD9",
             }
         }
     ]
