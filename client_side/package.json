@@ -10,7 +10,6 @@
     "dependencies": {
         "@element-plus/icons-vue": "^2.3.1",
         "axios": "^1.7.2",
-        "chart.js": "^4.4.3",
         "clipboard": "^2.0.11",
         "core-js": "^3.8.3",
         "d3": "^7.9.0",
@@ -19,7 +18,6 @@
         "prismjs": "^1.29.0",
         "route": "^0.2.5",
         "vue": "^3.2.13",
-        "vue-echarts": "^6.7.3",
         "vue-router": "^4.3.0",
         "xterm": "^3.1.0"
     },

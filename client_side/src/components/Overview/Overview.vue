@@ -58,10 +58,10 @@ const ChartOption = {
                     color: 'rgba(140,162,228, 1)'
                 }, {
                     offset: 1,
-                    color: 'rgba(75, 192, 192, 0.1)'
+                    color: 'rgba(75, 192, 192, 0.3)'
                 }], false),
                 shadowColor: 'rgba(0, 0, 0, 0.1)',
-                shadowBlur: 10
+                shadowBlur: 50
             },
             label: {
                 show: true,
@@ -74,7 +74,8 @@ const ChartOption = {
                     return "Path Number: " + params.data + "\nTime: " + params.name;
                 },
                 // 颜色
-                color: "#5C7BD9",
+                color: "#1a237e",
+                
             }
         }
     ]
